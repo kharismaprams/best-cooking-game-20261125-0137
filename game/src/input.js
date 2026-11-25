@@ -1,18 +1,14 @@
-// Mouse and keyboard both drive the same kitchen verbs: pick a ticket,
-// gather, chop, fire the wok, pull the plate, ring the bell.
+// Mouse and keyboard both drive the same kitchen verbs. Clicks and keys
+// queue route stops for the chef — counter, board, station, pass — and
+// each action fires when the chef arrives, so a route can be planned
+// three stops ahead while the tickets keep ticking.
 
 import { INGREDIENTS } from './config.js';
-import { LAYOUT, binRect, inside, ticketRect } from './layout.js';
+import { LAYOUT, binRect, customerRect, inside, ticketRect } from './layout.js';
 import {
-  addIngredient, chopHit, pullPlate, selectOrder, selectPlate,
-  servePlate, startCook, startShift, trashPlate,
+  queueAction, selectOrder, selectPlate, startShift, walkTo,
 } from './world.js';
 import { playSound } from './audio.js';
-
-function act(world, result, sound) {
-  if (result && result !== 'idle') playSound(world, sound);
-  return result;
-}
 
 export function handlePointer(world, x, y) {
   if (world.phase === 'title') {
@@ -29,7 +25,7 @@ export function handlePointer(world, x, y) {
   if (world.phase !== 'playing') return;
 
   for (let i = 0; i < world.orders.length; i++) {
-    if (inside(ticketRect(i), x, y)) {
+    if (inside(ticketRect(i), x, y) || inside(customerRect(i), x, y)) {
       selectOrder(world, i);
       playSound(world, 'pick');
       return;
@@ -37,18 +33,18 @@ export function handlePointer(world, x, y) {
   }
   for (let i = 0; i < INGREDIENTS.length; i++) {
     if (inside(binRect(i), x, y)) {
-      act(world, addIngredient(world, INGREDIENTS[i].id), 'pick');
+      queueAction(world, { kind: 'ingredient', id: INGREDIENTS[i].id });
+      playSound(world, 'pick');
       return;
     }
   }
   if (inside(LAYOUT.chop, x, y)) {
-    act(world, chopHit(world), 'chop');
+    queueAction(world, { kind: 'chop' });
     return;
   }
   for (let i = 0; i < LAYOUT.woks.length; i++) {
     if (inside(LAYOUT.woks[i], x, y)) {
-      if (world.woks[i].plate >= 0) act(world, pullPlate(world, i), 'perfect');
-      else act(world, startCook(world, i), 'sizzle');
+      queueAction(world, { kind: 'cook', station: i });
       return;
     }
   }
@@ -60,14 +56,14 @@ export function handlePointer(world, x, y) {
     }
   }
   if (inside(LAYOUT.serve, x, y)) {
-    const result = servePlate(world);
-    playSound(world, result === 'served' ? 'coin' : 'bad');
-    if (result === 'served') playSound(world, 'bell');
+    queueAction(world, { kind: 'serve' });
     return;
   }
   if (inside(LAYOUT.trash, x, y)) {
-    act(world, trashPlate(world), 'bad');
+    queueAction(world, { kind: 'trash' });
+    return;
   }
+  if (inside(LAYOUT.floor, x, y)) walkTo(world, x, y);
 }
 
 export function handleKey(world, key) {
@@ -93,22 +89,26 @@ export function handleKey(world, key) {
 
   const ingredient = INGREDIENTS.find((item) => item.key === key);
   if (ingredient) {
-    act(world, addIngredient(world, ingredient.id), 'pick');
+    queueAction(world, { kind: 'ingredient', id: ingredient.id });
+    playSound(world, 'pick');
     return;
   }
   if (key === ' ') {
-    act(world, chopHit(world), 'chop');
+    queueAction(world, { kind: 'chop' });
     return;
   }
-  if (lower === 'q') act(world, world.woks[0].plate >= 0 ? pullPlate(world, 0) : startCook(world, 0), 'sizzle');
-  else if (lower === 'w') act(world, world.woks[1].plate >= 0 ? pullPlate(world, 1) : startCook(world, 1), 'sizzle');
-  else if (lower === 'e') {
-    const result = servePlate(world);
-    playSound(world, result === 'served' ? 'coin' : 'bad');
-  } else if (lower === 't') act(world, trashPlate(world), 'bad');
+  if (lower === 'q') queueAction(world, { kind: 'cook', station: 0 });
+  else if (lower === 'w') queueAction(world, { kind: 'cook', station: 1 });
+  else if (lower === 'r') queueAction(world, { kind: 'cook', station: 2 });
+  else if (lower === 'e') queueAction(world, { kind: 'serve' });
+  else if (lower === 't') queueAction(world, { kind: 'trash' });
   else if (key === 'Tab') selectPlate(world, (world.activePlate + 1) % world.plates.length);
-  else if (key === 'ArrowRight') selectOrder(world, Math.min(world.orders.length - 1, world.selectedOrder + 1));
-  else if (key === 'ArrowLeft') selectOrder(world, Math.max(0, world.selectedOrder - 1));
+  else if (lower === 'x') selectOrder(world, Math.min(world.orders.length - 1, world.selectedOrder + 1));
+  else if (lower === 'z') selectOrder(world, Math.max(0, world.selectedOrder - 1));
+  else if (key === 'ArrowLeft') walkTo(world, world.chefX - 90, world.chefY);
+  else if (key === 'ArrowRight') walkTo(world, world.chefX + 90, world.chefY);
+  else if (key === 'ArrowUp') walkTo(world, world.chefX, world.chefY - 60);
+  else if (key === 'ArrowDown') walkTo(world, world.chefX, world.chefY + 60);
 }
 
 export function attachInput(canvas, world, toGamePoint) {

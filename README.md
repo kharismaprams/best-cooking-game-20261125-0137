@@ -4,7 +4,7 @@
 [![rank](https://make.fun/badge/best-cooking-game-20261125-0137/kharismaprams/best-cooking-game-20261125-0137/rank.svg)](https://make.fun/bounty/best-cooking-game-20261125-0137/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=best-cooking-game-20261125-0137)
 [![reward](https://make.fun/badge/best-cooking-game-20261125-0137/kharismaprams/best-cooking-game-20261125-0137/reward.svg)](https://make.fun/bounty/best-cooking-game-20261125-0137?utm_source=github&utm_medium=readme&utm_campaign=best-cooking-game-20261125-0137)
 
-Wajan Malam — Night Wok Rush: a 150-second night-market cooking game. Read the order board, gather rice, noodles, egg, chicken, chili and greens from the counter, chop what needs chopping, fire complete plates in two woks, pull each dish inside its golden band, and serve before patience runs out. Six original dishes share the same six ingredients, so the winning route feeds two tickets at once while the rush speeds up.
+Wajan Malam — Night Wok Rush: a 150-second night-market cooking game with a movable chef and a click-to-route queue. Read the ticket cards, gather prawn, beef, noodles, dumplings, greens, chili, egg and broth from the pantry rail, chop what needs chopping, then fire each complete plate at its station — wok toss, simmer pot or bamboo steamer — pull it inside the golden band, and serve at the pass before patience runs out. Eight original dishes share the same eight ingredients, ticket checklists track every step, VIPs tip big, and combo, spice rush, a sharp knife and a tip jar reward a clean route through the rush.
 
 ## Run it
 
@@ -12,7 +12,7 @@ Wajan Malam — Night Wok Rush: a 150-second night-market cooking game. Read the
 node serve.ts
 ```
 
-Then open http://localhost:8080 in a desktop browser. Play with mouse clicks or keys 1-6, Space to chop, Q/W for the woks, E to serve, T to trash, P to pause, M for sound.
+Then open http://localhost:8080 in a desktop browser. Play with mouse clicks or keys 1-8 to gather, Space to chop, Q for the wok, W for the simmer pot, R for the steamer, E to serve, T to trash, Tab to switch plate, Z/X to switch ticket, arrow keys to walk, P to pause, M for sound.
 
 ---
 

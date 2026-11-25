@@ -3,6 +3,7 @@
 // screen readers while the canvas does the talking.
 
 import { VIEW } from './config.js';
+import { playSound } from './audio.js';
 import { attachInput } from './input.js';
 import { drawWorld } from './render.js';
 import { applyShot } from './shots.js';
@@ -51,6 +52,7 @@ function frame(now) {
   last = now;
   if (!shot) updateWorld(world, dt);
   else world.time += 0;
+  while (world.sounds.length) playSound(world, world.sounds.shift());
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.fillStyle = '#160f14';

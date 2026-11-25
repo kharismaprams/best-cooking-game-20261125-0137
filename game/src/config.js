@@ -1,16 +1,18 @@
-// The pantry, the menu and the pace of the night. Every recipe is built from
-// the same six ingredients, so a good cook plans one route that feeds two
-// tickets at once instead of running back and forth for every dish.
+// The pantry, the menu and the pace of the night. Eight ingredients feed
+// eight dishes, so a good cook plans one route that serves two tickets at
+// once instead of running back and forth for every plate.
 
 export const VIEW = { width: 1280, height: 720 };
 
 export const INGREDIENTS = [
-  { id: 'rice', name: 'Rice', key: '1', color: '#f4ead2', dark: '#cbb98d', chop: false },
-  { id: 'noodles', name: 'Noodles', key: '2', color: '#f2c14e', dark: '#c99327', chop: false },
-  { id: 'egg', name: 'Egg', key: '3', color: '#ffd94d', dark: '#e0a81c', chop: false },
-  { id: 'chicken', name: 'Chicken', key: '4', color: '#e88ca0', dark: '#b8506e', chop: true },
-  { id: 'chili', name: 'Chili', key: '5', color: '#e23b2e', dark: '#a51f16', chop: true },
-  { id: 'greens', name: 'Greens', key: '6', color: '#57b24a', dark: '#2f7d27', chop: true },
+  { id: 'prawn', name: 'Prawn', key: '1', color: '#ff9d7a', dark: '#d95f43', chop: true },
+  { id: 'beef', name: 'Beef', key: '2', color: '#c94f4f', dark: '#8c2f2f', chop: true },
+  { id: 'noodles', name: 'Noodles', key: '3', color: '#f2c14e', dark: '#c99327', chop: false },
+  { id: 'dumpling', name: 'Dumpling', key: '4', color: '#f0dcbc', dark: '#c9a86a', chop: false },
+  { id: 'greens', name: 'Greens', key: '5', color: '#57b24a', dark: '#2f7d27', chop: true },
+  { id: 'chili', name: 'Chili', key: '6', color: '#e23b2e', dark: '#a51f16', chop: true },
+  { id: 'egg', name: 'Egg', key: '7', color: '#ffd94d', dark: '#e0a81c', chop: false },
+  { id: 'broth', name: 'Broth', key: '8', color: '#f0a832', dark: '#b96f14', chop: false },
 ];
 
 export const INGREDIENT_BY_ID = Object.fromEntries(INGREDIENTS.map((item) => [item.id, item]));
@@ -22,47 +24,71 @@ export const RECIPES = [
     needs: ['egg', 'greens', 'chili'],
     cookSeconds: 4,
     price: 18,
-    blurb: 'Quick omelette, first ticket of the night',
+    station: 'steam',
+    blurb: 'Steamed omelette, first ticket of the night',
   },
   {
-    id: 'nasi-goreng',
-    name: 'Nasi Goreng',
-    needs: ['rice', 'egg', 'chili', 'greens'],
+    id: 'mie-sapi',
+    name: 'Mie Sapi',
+    needs: ['noodles', 'beef', 'greens', 'egg'],
     cookSeconds: 6,
     price: 30,
-    blurb: 'Smoky fried rice from the big wok',
+    station: 'wok',
+    blurb: 'Beef noodles tossed in the big wok',
   },
   {
-    id: 'ayam-sambal',
-    name: 'Ayam Sambal',
-    needs: ['chicken', 'chili', 'rice'],
+    id: 'sapi-sambal',
+    name: 'Sapi Sambal',
+    needs: ['beef', 'chili', 'greens'],
     cookSeconds: 7,
     price: 34,
-    blurb: 'Chicken under a bright chili sambal',
+    station: 'wok',
+    blurb: 'Beef under a bright chili sambal',
   },
   {
     id: 'mie-wajan',
     name: 'Mie Wajan',
-    needs: ['noodles', 'egg', 'greens', 'chicken'],
+    needs: ['noodles', 'egg', 'greens', 'prawn'],
     cookSeconds: 7,
     price: 36,
+    station: 'wok',
     blurb: 'Tossed noodles, greens still crisp',
   },
   {
-    id: 'mie-ayam-lada',
-    name: 'Mie Ayam Lada',
-    needs: ['noodles', 'chicken', 'chili', 'egg'],
+    id: 'pangsit-kuah',
+    name: 'Pangsit Kuah',
+    needs: ['dumpling', 'broth', 'greens', 'egg'],
     cookSeconds: 8,
-    price: 42,
-    blurb: 'Peppery chicken noodles with egg ribbons',
+    price: 40,
+    station: 'simmer',
+    blurb: 'Dumplings in a golden broth',
   },
   {
-    id: 'nasi-ayam-rempah',
-    name: 'Nasi Ayam Rempah',
-    needs: ['rice', 'chicken', 'greens', 'egg', 'chili'],
+    id: 'udang-saus',
+    name: 'Udang Saus',
+    needs: ['prawn', 'chili', 'broth', 'dumpling'],
+    cookSeconds: 8,
+    price: 46,
+    station: 'wok',
+    blurb: 'Prawns glossed in a chili broth sauce',
+  },
+  {
+    id: 'mie-udang',
+    name: 'Mie Udang',
+    needs: ['noodles', 'prawn', 'broth', 'greens', 'chili'],
+    cookSeconds: 9,
+    price: 52,
+    station: 'simmer',
+    blurb: 'Prawn noodles in a spiced broth',
+  },
+  {
+    id: 'bakmi-komplit',
+    name: 'Bakmi Komplit',
+    needs: ['noodles', 'beef', 'prawn', 'egg', 'greens'],
     cookSeconds: 10,
     price: 55,
-    blurb: 'The full plate: rice, chicken, egg, greens, chili',
+    station: 'wok',
+    blurb: 'The full bowl: beef, prawn, egg, greens',
   },
 ];
 
@@ -80,13 +106,31 @@ export const TUNING = {
   perfectFrom: 0.68,
   perfectTo: 0.92,
   burnAt: 1.18,
+  simmerRate: 0.85,
+  simmerBandBonus: 0.06,
+  steamRate: 0.95,
+  steamBandBonus: 0.03,
+  knifeAt: 6,
+  tipJarAt: 10,
+  tipJarBonus: 3,
+  vipChance: 0.18,
+  vipTipShare: 0.6,
   hearts: 3,
   comboStep: 0.1,
   comboCap: 10,
-  starTargets: [220, 420, 650],
+  starTargets: [260, 480, 720],
 };
 
 export const CUSTOMERS = [
   'Mbak Sari', 'Pak Dedi', 'Rina', 'Bimo', 'Ayu', 'Joko', 'Dewi', 'Rudi',
   'Sinta', 'Agus', 'Tari', 'Bambang', 'Lia', 'Fajar', 'Nia', 'Eko',
+];
+
+export const CUSTOMER_LOOKS = [
+  { skin: '#f2c49b', hair: '#2b1a12', shirt: '#e23b2e', hat: 'cap' },
+  { skin: '#c98a5e', hair: '#17131c', shirt: '#2f7d27', hat: 'none' },
+  { skin: '#ffd9b3', hair: '#7a4a2b', shirt: '#ffb703', hat: 'bun' },
+  { skin: '#a96b3f', hair: '#2b1a12', shirt: '#3a6ea5', hat: 'cap' },
+  { skin: '#f2c49b', hair: '#b8506e', shirt: '#7a4a8c', hat: 'bun' },
+  { skin: '#8a5a33', hair: '#17131c', shirt: '#ff8c42', hat: 'none' },
 ];
